@@ -18,6 +18,9 @@ phases:
       
       - './scripts/publish.sh cicd-publish ${AWS_REGION} stable' 
 
+      # Publish stable tag to Dockerhub
+      - './scripts/publish.sh cicd-publish ${AWS_REGION} public-dockerhub'
+
        # Assume role to publish, get the credentials, and set them as environment variables
       - |
         if [ "${PUBLISH_ROLE_ARN_PUBLIC_ECR}" != "" ]; then
@@ -26,8 +29,8 @@ phases:
           export AWS_SECRET_ACCESS_KEY=`echo $CREDS | jq -r .Credentials.SecretAccessKey`
           export AWS_SESSION_TOKEN=`echo $CREDS | jq -r .Credentials.SessionToken`
         fi
-       # Publish stable tag to Public ECR and Dockerhub
-      - './scripts/publish.sh cicd-publish stable public-repo'
+       # Publish stable tag to Public ECR
+      - './scripts/publish.sh cicd-publish ${AWS_REGION} public-ecr'
 
       # Nullify the temporary credentials for the assumed role to publish
       - |

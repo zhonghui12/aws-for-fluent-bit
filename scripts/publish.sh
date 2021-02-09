@@ -612,9 +612,14 @@ if [ "${1}" = "cicd-publish" ]; then
 		for region in ${classic_regions}; do
 			sync_latest_image ${region} ${classic_regions_account_id}
 		done
-	elif [ "${2}" = "stable" ]; then
-		publish_to_docker_hub amazon/aws-for-fluent-bit stable
-		publish_to_public_ecr amazon/aws-for-fluent-bit stable
+	elif [ $# -eq 3 ] && [ "${3}" = "public-dockerhub" ]; then
+		if [ "${2}" = "us-west-2" ]; then
+			publish_to_docker_hub amazon/aws-for-fluent-bit stable
+		fi
+	elif [ $# -eq 3 ] && [ "${3}" = "public-ecr" ]; then
+		if [ "${2}" = "us-west-2" ]; then
+			publish_to_public_ecr amazon/aws-for-fluent-bit stable
+		fi
 	else
 		publish_ecr "${2}" ${classic_regions_account_id}
 	fi
